@@ -14,6 +14,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import io.lettuce.core.ClientOptions;
+import io.lettuce.core.SslOptions;
 import io.lettuce.core.TimeoutOptions;
 
 @Configuration
@@ -39,11 +40,15 @@ public class RedisConfig {
             .timeoutOptions(TimeoutOptions.builder()
                 .fixedTimeout(Duration.ofMillis(timeout))
                 .build())
+            .sslOptions(SslOptions.builder()
+                .jdkSslProvider()
+                .build())
             .build();
 
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
             .clientOptions(clientOptions)
             .commandTimeout(Duration.ofMillis(timeout))
+            .useSsl()
             .build();
 
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
